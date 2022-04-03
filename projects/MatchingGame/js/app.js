@@ -14,10 +14,12 @@ window.addEventListener("load", () => {
    * Create a list that holds all of your cards
    */
     const [deck] = document.getElementsByClassName('deck');
-  const lis = document.getElementsByClassName("card");
-  const [restart] = document.getElementsByClassName("fa-repeat");
-  const [moves] = document.getElementsByClassName("moves");
-    let tmpElement, firstTime = true;
+    const lis = document.getElementsByClassName("card");
+    const [restart] = document.getElementsByClassName("fa-repeat");
+    const [star] = document.getElementsByClassName("fa-star");
+    const [starsContainer] = document.getElementsByClassName("stars");
+    const [moves] = document.getElementsByClassName("moves");
+    let matchs = 0, tmpElement, firstTime = true;
   /*
    * Display the cards on the page
    *   - shuffle the list of cards using the provided "shuffle" method below
@@ -65,14 +67,49 @@ window.addEventListener("load", () => {
         }
     }
 
+    function createI() {
+        const i = document.createElement('i');
+        i.classList.add('fa', 'fa-star');
+
+        return i;
+    }
+
+    function addStar(limit) {
+        if (!(starsContainer.childNodes.length > limit)) {
+            starsContainer.appendChild(createI());             
+        }
+    }
+
+    function displaayStars() {
+        if (matchs >= 2 && matchs <= 4) {
+
+            console.log(`Match ${matchs}`)
+            addStar(0);
+            
+        }
+        if (matchs > 4 && matchs <=6) {
+            // rmChild(starsContainer)
+            console.log(`Match ${matchs}`)
+            addStar(1);
+        }
+        
+        if (matchs > 6 && matchs <= 8) {
+            // rmChild(starsContainer)
+            console.log(`Match ${matchs}`)
+            addStar(2);
+        }
+    }
+
     function openCard(el) {
-        el?.classList.add('open', 'show');
+        el.classList.add('open', 'show');
         moves.textContent = parseInt(moves.textContent) + 1;
     }
 
     function cardMatch(el) {
         openCard(el)
-        el?.classList.add('show');
+        matchs = matchs + 1;
+        el.classList.add('show');
+        displaayStars()
     }
 
     function removeElement(el) {
@@ -84,7 +121,7 @@ window.addEventListener("load", () => {
     function changeFirstElement(el, lis) {
         let ls = shuffle([...lis]);
         ls.map(li => {
-            if (el?.classList.value === li.firstElementChild.classList.value) {
+            if (el.classList.value === li.firstElementChild.classList.value) {
                 li.classList.add('match');
             }
         });
@@ -102,15 +139,21 @@ window.addEventListener("load", () => {
      */
     function init() {
         moves.textContent = 0;
+        // firstTime = true;
         let shuffleds = shuffle([...lis]);
-        while (deck.firstChild) {
-            deck.removeChild(deck.firstChild)
-        }
-
+        rmChild(deck);
+        rmChild(starsContainer);
+        console.log(star)
         addElements(shuffleds);
         
     }
 
+    function rmChild(el) {
+        console.log(el);
+        while (el?.firstChild) {
+            el?.removeChild(el?.firstChild);
+        }
+    }
 
 
     init()
