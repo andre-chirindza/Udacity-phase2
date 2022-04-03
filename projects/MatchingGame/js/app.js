@@ -13,6 +13,7 @@ window.addEventListener("load", () => {
   /*
    * Create a list that holds all of your cards
    */
+    const [container] = document.getElementsByClassName('container');
     const [deck] = document.getElementsByClassName('deck');
     const lis = document.getElementsByClassName("card");
     const [restart] = document.getElementsByClassName("fa-repeat");
@@ -46,22 +47,25 @@ window.addEventListener("load", () => {
     
     function process(object) {
         const tmpLi = object.target
-        if (!(tmpLi.classList.contains('show') && tmpLi.classList.contains('open')) || !(tmpLi.classList.contains('match'))) {
-
-            if ((!tmpElement && firstTime)) {
-                firstTime = false;
-                openCard(tmpLi);
-                tmpElement = object.target.firstElementChild;
-            } else {
-                if (tmpElement?.classList.value === tmpLi.firstElementChild.classList.value) {
-                    cardMatch(tmpLi);
-                    changeFirstElement(tmpElement, lis);
-                    tmpElement = null;
-                    firstTime = true;
-                } else {
+        if (!(tmpLi.tagName.toUpperCase() === 'i'.toUpperCase()) ) {
+            if (!(tmpLi.classList.contains('show') && tmpLi.classList.contains('open'))) {
+    
+                if ((!tmpElement && firstTime)) {
+                    firstTime = false;
                     openCard(tmpLi);
-                    removeElement(tmpLi);
-        
+                    tmpElement = tmpLi.firstElementChild;
+                } else {
+                    console.log(tmpLi.tagName);
+                    if (tmpElement?.classList.value === tmpLi.firstElementChild.classList.value) {
+                        cardMatch(tmpLi);
+                        changeFirstElement(tmpElement, lis);
+                        tmpElement = null;
+                        firstTime = true;
+                    } else {
+                        openCard(tmpLi);
+                        removeElement(tmpLi);
+            
+                    }
                 }
             }
         }
@@ -97,6 +101,11 @@ window.addEventListener("load", () => {
             // rmChild(starsContainer)
             console.log(`Match ${matchs}`)
             addStar(2);
+            if (matchs == 8) {
+                setTimeout(() => {
+                    messageDisplay()
+                }, 300);
+            }
         }
     }
 
@@ -127,11 +136,11 @@ window.addEventListener("load", () => {
         });
     }
 
-    function addElements(els) {
+    function addElements(els, el) {
         for (const shuffled of els) {
             shuffled.classList.remove('open', 'show', 'match')
             shuffled.addEventListener('click', process)
-            deck.appendChild(shuffled);
+            el.appendChild(shuffled);
         }
     }
     /*
@@ -139,12 +148,13 @@ window.addEventListener("load", () => {
      */
     function init() {
         moves.textContent = 0;
-        // firstTime = true;
+        matchs = 0;
         let shuffleds = shuffle([...lis]);
         rmChild(deck);
         rmChild(starsContainer);
         console.log(star)
-        addElements(shuffleds);
+        console.log(shuffleds)
+        addElements(shuffleds, deck);
         
     }
 
@@ -155,6 +165,25 @@ window.addEventListener("load", () => {
         }
     }
 
+    function messageDisplay() {
+        
+        const text = `Great Work! Your need ${matchs} moves to complete to match all symbols.`;
+        const textButton = `Play again`;
+        const div = document.createElement('div');
+        const p = document.createElement('p');
+        const button = document.createElement('button');
+        p.textContent= text;
+        button.textContent = textButton;
+        button.classList.add('button');
+        button.addEventListener('click', () => {
+            container.removeChild(div);
+            init()
+        });
+
+        div.appendChild(p);
+        div.appendChild(button);
+        container.appendChild(div);
+    }
 
     init()
 
