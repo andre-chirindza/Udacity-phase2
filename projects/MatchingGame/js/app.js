@@ -196,7 +196,7 @@ window.addEventListener("load", () => {
 
     function messageDisplay() {
         
-        const text = `Great Work! Your need ${current_time_played} to do ${matchs} moves to complete to match all symbols.`;
+        const text = `Great Work! Your need ${current_time_played} to do ${moves} moves to complete to match all symbols.`;
         const textButton = `Play again`;
         const div = document.createElement('div');
         const p = document.createElement('p');
