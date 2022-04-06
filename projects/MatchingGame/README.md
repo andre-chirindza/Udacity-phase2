@@ -3,18 +3,11 @@
 ## Table of Contents
 
 * [Instructions](#instructions)
-* [Contributing](#contributing)
 
 ## Instructions
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
-
-To get started, open `js/app.js` and start building out the app's functionality
-
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
-
-## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
-
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+Once the game start you have too choose one box and click them.
+Then you have to choose randomly the match box (with the same object)
+When you click in the box to match it will open and show you the object and if it match with the last sticked object, it'll change the background but if not match it will close.
+The game end when the 8 objects are matched.
+After all objects match. the system will show the number of moves and the time you took to complete all matchs.

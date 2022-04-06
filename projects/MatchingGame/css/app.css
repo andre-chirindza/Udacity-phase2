@@ -114,7 +114,10 @@ h1 {
     border: 2px solid #191f19; 
     padding: 10px 24px;
 }
-
+.timer{
+    float: left;
+    margin-left: 10px;
+}
 .end{
     width: 660px;
     min-height: 680px;

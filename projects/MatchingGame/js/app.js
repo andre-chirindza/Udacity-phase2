@@ -20,13 +20,38 @@ window.addEventListener("load", () => {
     const [star] = document.getElementsByClassName("fa-star");
     const [starsContainer] = document.getElementsByClassName("stars");
     const [moves] = document.getElementsByClassName("moves");
-    let matchs = 0, tmpElement, firstTime = true;
+    const [time] = document.getElementsByClassName('time')
+    let matchs = 0, tmpElement, firstTime = true, current_time_played, timer;
   /*
    * Display the cards on the page
    *   - shuffle the list of cards using the provided "shuffle" method below
    *   - loop through each card and create its HTML
    *   - add each card's HTML to the page
    */
+
+    //Timer function provide by the reviewer
+    
+    function gameTimer(el_display) {
+        const game_start_time = new Date().getTime();
+
+        return setInterval(function () {
+            let current_time = new Date().getTime();
+            current_time_played = current_time - game_start_time;
+            let hrs = Math.floor((current_time_played % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let mins = Math.floor((current_time_played % (1000 * 60 * 60 * 24)) / (1000 * 60));
+            let secs = Math.floor((current_time_played % (1000 * 60)) / 1000);
+
+            if (secs < 10) {
+                secs = '0' + secs;
+            }
+
+            el_display.textContent = hrs + ":" + mins + ":" + secs;
+
+            current_time_played = hrs + ":" + mins + ':' + secs;
+
+        }, 500);
+        
+    }
 
   // Shuffle function from http://stackoverflow.com/a/2450976
   function shuffle(array) {
@@ -102,6 +127,9 @@ window.addEventListener("load", () => {
             console.log(`Match ${matchs}`)
             addStar(2);
             if (matchs == 8) {
+                clearTimeout(timer);
+                clearInterval(timer);
+                console.log(timer);
                 setTimeout(() => {
                     messageDisplay()
                 }, 300);
@@ -142,6 +170,7 @@ window.addEventListener("load", () => {
             shuffled.addEventListener('click', process)
             el.appendChild(shuffled);
         }
+        timer = gameTimer(time);
     }
     /*
     * 
@@ -167,7 +196,7 @@ window.addEventListener("load", () => {
 
     function messageDisplay() {
         
-        const text = `Great Work! Your need ${matchs} moves to complete to match all symbols.`;
+        const text = `Great Work! Your need ${current_time_played} to do ${matchs} moves to complete to match all symbols.`;
         const textButton = `Play again`;
         const div = document.createElement('div');
         const p = document.createElement('p');
