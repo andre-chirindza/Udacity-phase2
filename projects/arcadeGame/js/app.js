@@ -57,6 +57,7 @@ let Player = function (sprite) {
     this.life = 3;
     this.x = 200;
     this.y = 420;
+    this.score = 0;
 };
 
 Player.prototype = {
@@ -67,6 +68,7 @@ Player.prototype = {
     },
     update: function () {},
     handleInput: function (allowedKeys) {
+        if (this.life <= 0) return;
         switch (allowedKeys) {
             case "left":
                 if (this.x >= 100) {
@@ -85,6 +87,7 @@ Player.prototype = {
             case "up":
                 if (this.y >= 40) {
                     updateMoves();
+                    console.log(this.y);
                     this.y -= moveValue;
                 }
                 break;
@@ -106,19 +109,29 @@ Player.prototype = {
             return;
         }
     },
+    score: function () {
+        this.score += 100;
+    }
 };
 
-let xRandomic = Math.random() * 10;
-let yRandomic = Math.random() * 10;
 class Gem {
-    constructor(sprite, x, y) {
+    constructor(sprite) {
+        this.yPositions = [80, 160, 240] // Line 2,3,4
+        let xPosition = parseInt(Math.random() * 5 * 85); //Five columns
+        let xRandomic = 20;
+        let yRandomic = parseInt(Math.random() * this.yPositions.length);
+        
         this.sprite = sprite;
-        this.x = x;
-        this.y = y;
+        this.x = xRandomic + xPosition;
+        this.y = this.yPositions[yRandomic];
+        console.log(this.x, sprite)
     }
 
     render() {
-        ctx.drawImage(Resources.get(this.sprite), xRandomic + this.x, yRandomic + this.y);
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+    update() {
+        
     }
 }
 // Now instantiate your objects.
@@ -131,9 +144,9 @@ let allEnemies = [
 ];
 
 let allGems = [
-    new Gem("images/Gem Green.png", Math.random() * 100, Math.random() * 220),
-    new Gem("images/Gem Orange.png", Math.random() * 100, Math.random() * 250),
-    new Gem("images/Gem Blue.png", Math.random() * 100, Math.random() * 200),
+    new Gem("images/Gem Green.png"),
+    new Gem("images/Gem Orange.png"),
+    new Gem("images/Gem Blue.png"),
 ]
 // Place the player object in a variable called player
 

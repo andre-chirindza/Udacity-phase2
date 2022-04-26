@@ -81,6 +81,7 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         checkCollisions();
+        checkPoints()
     }
 
     /* This is called by the update function and loops through all of the
@@ -94,7 +95,19 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+
+        allGems.forEach(gem => gem.update())
         player.update();
+    }
+
+    function checkPoints() {
+        allGems.forEach((gem, index) => {
+            if (Math.abs(gem.x - player.x) < 50 && Math.abs(gem.y - player.y) < 50) {
+                
+                updateScores();
+                allGems.splice(index,1)
+            } 
+        });
     }
 
     function checkCollisions() {
