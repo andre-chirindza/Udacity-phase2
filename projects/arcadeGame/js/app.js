@@ -2,6 +2,7 @@ let moves = document.getElementById("moves");
 let timer = document.getElementById("timer");
 let life = document.getElementById("life");
 let scores = document.getElementById("scores");
+let body = document.getElementsByTagName('body')[0];
 let moveValue = 85;
 
 let updateMoves = () => {
@@ -12,7 +13,11 @@ let updateScores = () => {
     let value = scores.textContent;
     scores.textContent = parseInt(value) + 1;
 };
-
+let gameWin = () => {
+    let winner = document.createElement('p');
+    winner.textContent = `Congratulations! You haver win!`;
+    body.appendChild(winner);
+}
 let updateLifes = lifes => {
     life.textContent = lifes;
 };
@@ -32,25 +37,18 @@ var Enemy = function (sprite, x, y) {
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function (dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-    if (this.x <= ctx.canvas.width) {
-        this.x += this.speed * dt;
-    } else {
-        this.x = -120;
+Enemy.prototype = {
+    update: function (dt) {
+        if (this.x <= ctx.canvas.width) {
+            this.x += this.speed * dt;
+        } else {
+            this.x = -120;
+        }
+    },
+    render: function () {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 };
-
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function () {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
 
 let Player = function (sprite) {
     this.sprite = sprite;
@@ -68,6 +66,10 @@ Player.prototype = {
     },
     update: function () {},
     handleInput: function (allowedKeys) {
+        if (allGems.length == 0) {
+            gameWin();
+            return;
+        }
         if (this.life <= 0) return;
         switch (allowedKeys) {
             case "left":
@@ -87,7 +89,6 @@ Player.prototype = {
             case "up":
                 if (this.y >= 40) {
                     updateMoves();
-                    console.log(this.y);
                     this.y -= moveValue;
                 }
                 break;
@@ -185,9 +186,5 @@ let gameTimer = el_display => {
         current_time_played = hrs + ":" + mins + ':' + secs;
 
     }, 500);
-
-}
-
-let endGame = () => {
 
 }

@@ -103,17 +103,14 @@ var Engine = (function(global) {
     function checkPoints() {
         allGems.forEach((gem, index) => {
             if (Math.abs(gem.x - player.x) < 50 && Math.abs(gem.y - player.y) < 50) {
-                
                 updateScores();
-                allGems.splice(index,1)
+                allGems.splice(index, 1);
             } 
         });
     }
 
     function checkCollisions() {
         allEnemies.forEach(enemy => {
-            // console.log(Math.round(enemy.x))
-            // console.log(player.x)
             if (Math.abs(enemy.x - player.x) < 50 && Math.abs(enemy.y - player.y) < 50) {
                 player.collision();
                 
