@@ -5,19 +5,49 @@ let scores = document.getElementById("scores");
 let body = document.getElementsByTagName('body')[0];
 let moveValue = 85;
 
+// Increase the moves and set it to the element
 let updateMoves = () => {
     let value = moves.textContent;
     moves.textContent = parseInt(value) + 1;
 };
+
+// Increase the score and set it to the element
 let updateScores = () => {
     let value = scores.textContent;
     scores.textContent = parseInt(value) + 1;
 };
+
+// create and display the win message
 let gameWin = () => {
     let winner = document.createElement('p');
-    winner.textContent = `Congratulations! You haver win!`;
+    winner.setAttribute('id', 'winner');
+    winner.textContent = `Congratulations! You haver win! Press ENTER to play again`;
     body.appendChild(winner);
 }
+
+//Create and display the looser message 
+let gameLoose = () => {
+    let looser = document.createElement('p');
+    looser.setAttribute('id', 'looser');
+    looser.textContent = `You haver loosed! Press ENTER to play again`;
+    body.appendChild(looser);
+}
+
+//Remove the win or loose message
+let removeGameWinOrLoose = function () {
+    moves.textContent = 0;
+    scores.textContent = 0;
+    let looser = document.getElementById('looser');
+    let winner = document.getElementById('winner');
+
+    if (looser) {
+        body.removeChild(looser);
+    } else {
+        body.removeChild(winner);
+    }
+}
+
+//Set the life
 let updateLifes = lifes => {
     life.textContent = lifes;
 };
@@ -50,30 +80,41 @@ Enemy.prototype = {
     }
 };
 
+// Creating the Player object
 let Player = function (sprite) {
     this.sprite = sprite;
-    this.life = 3;
-    this.x = 200;
-    this.y = 420;
-    this.score = 0;
+    this.start()
 };
 
+// Player methods
 Player.prototype = {
     constructor: Player,
     render: function () {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
         updateLifes(this.life)
     },
+    start: function () {
+        this.life = 3;
+        this.x = 200;
+        this.y = 420;
+        this.score = 0;
+        this.win = false;
+        this.stop = false;
+    },
     update: function () {},
     handleInput: function (allowedKeys) {
-        if (allGems.length == 0) {
-            gameWin();
-            return;
+        if (this.stop) {
+            if (allowedKeys == "enter") {
+                console.log('Enter Cliked');
+                createGems();
+                this.start();
+                removeGameWinOrLoose();
+            }
         }
-        if (this.life <= 0) return;
         switch (allowedKeys) {
             case "left":
                 if (this.x >= 100) {
+                    console.log(this.stop)
                     updateMoves();
                     this.x -= 100;
                 }
@@ -115,6 +156,7 @@ Player.prototype = {
     }
 };
 
+// Definig the Gem class using classes
 class Gem {
     constructor(sprite) {
         this.yPositions = [80, 160, 240] // Line 2,3,4
@@ -143,14 +185,18 @@ let allEnemies = [
     new Enemy("images/enemy-bug.png", 0, 140),
     new Enemy("images/enemy-bug.png", 0, 220),
 ];
+let allGems = [];
 
-let allGems = [
-    new Gem("images/Gem Green.png"),
-    new Gem("images/Gem Orange.png"),
-    new Gem("images/Gem Blue.png"),
-]
+// function to initiate gems
+let createGems = function () {
+    allGems = [
+        new Gem("images/Gem Green.png"),
+        new Gem("images/Gem Orange.png"),
+        new Gem("images/Gem Blue.png"),
+    ]
+}
+
 // Place the player object in a variable called player
-
 let player = new Player("images/char-boy.png");
 
 // This listens for key presses and sends the keys to your
@@ -161,6 +207,7 @@ document.addEventListener("keyup", function (e) {
         38: "up",
         39: "right",
         40: "down",
+        13: "enter",
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
@@ -188,3 +235,6 @@ let gameTimer = el_display => {
     }, 500);
 
 }
+
+// Calling createGems
+createGems()

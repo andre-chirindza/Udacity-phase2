@@ -81,7 +81,8 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         checkCollisions();
-        checkPoints()
+        checkPoints();
+        
     }
 
     /* This is called by the update function and loops through all of the
@@ -92,29 +93,44 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
+        if (player.stop) return;
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-
+        
         allGems.forEach(gem => gem.update())
         player.update();
     }
 
+    // Check if the position of the player matches with the position of the gem and remove
+    // if it match
     function checkPoints() {
-        allGems.forEach((gem, index) => {
-            if (Math.abs(gem.x - player.x) < 50 && Math.abs(gem.y - player.y) < 50) {
-                updateScores();
-                allGems.splice(index, 1);
-            } 
-        });
+        if (!player.stop) {
+            if (allGems.length === 0) {
+                player.stop = true;
+                player.win = true;
+                gameWin()
+                return;
+            }
+            allGems.forEach((gem, index) => {
+                if (Math.abs(gem.x - player.x) < 50 && Math.abs(gem.y - player.y) < 50) {
+                    updateScores();
+                    allGems.splice(index, 1);
+                }
+            });    
+        }
+        
     }
 
+    // Checking if the player touchs in the enemy
     function checkCollisions() {
         allEnemies.forEach(enemy => {
             if (Math.abs(enemy.x - player.x) < 50 && Math.abs(enemy.y - player.y) < 50) {
                 player.collision();
                 
-                if (player.life < 0) {
+                if (player.life == 0) {
+                    player.stop = true;
+                    gameLoose();
                     return;
                 }
             }
