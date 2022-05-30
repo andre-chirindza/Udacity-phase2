@@ -114,7 +114,6 @@ Player.prototype = {
         switch (allowedKeys) {
             case "left":
                 if (this.x >= 100) {
-                    console.log(this.stop)
                     updateMoves();
                     this.x -= 100;
                 }
@@ -128,9 +127,13 @@ Player.prototype = {
                 break;
 
             case "up":
-                if (this.y >= 40) {
+                if (this.y >= 165) {
                     updateMoves();
+                    console.log(this.y)
                     this.y -= moveValue;
+                } else {
+                    this.y -= moveValue;
+                    this.collision();
                 }
                 break;
             case "down":
